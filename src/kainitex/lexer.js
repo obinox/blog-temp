@@ -1,52 +1,125 @@
-const token_regex = {
-    COMMAND: /^\\(?:[a-zA-Z]+|.)/,
-    NUMBER: /^\d+(?:\.\d+)?/,
-    IDENTIFIER: /^\p{L}/u,
+const token_regex = [
+    ["COMMAND", /\\(?:[a-zA-Z]+|.)/y],
+    ["NUMBER", /\d+(?:\.\d+)?/y],
+    ["IDENTIFIER", /\p{L}/uy],
 
-    LBRACE: /^\{/,
-    RBRACE: /^\}/,
-    LPAREN: /^\(/,
-    RPAREN: /^\)/,
-    LBRACKET: /^\[/,
-    RBRACKET: /^\]/,
+    ["LBRACE", /\{/y],
+    ["RBRACE", /\}/y],
+    ["LPAREN", /\(/y],
+    ["RPAREN", /\)/y],
+    ["LBRACKET", /\[/y],
+    ["RBRACKET", /\]/y],
 
-    SUP: /^\^/,
-    SUB: /^_/,
+    ["SUP", /\^/y],
+    ["SUB", /_/y],
 
-    OPERATOR: /^[+\-*/=<>|,:;!?]/,
-    ALIGN: /^&/,
+    ["OPERATOR", /[+\-*/=<>|,:;!?]/y],
+    ["ALIGN", /&/y],
 
-    SPACE: /^[ \t\r\n]+/,
-    COMMENT: /^%.*/,
+    ["DOLLAR", /\$/y],
+    ["TILDE", /~/y],
 
-    DOLLAR: /^\$/,
-    TILDE: /^~/,
+    ["CHAR", /./uy],
+];
 
-    CHAR: /^./u,
-};
+const space_regex = /\s+/y;
+const comment_regex = /%.*/y;
 
-Object.freeze(token_regex);
+class Token {
+    constructor(type, value, start, end, line, column) {
+        this.type = type;
+        this.value = value;
 
-function lexer(input) {
-    const tokens = [];
-    let index = 0;
+        this.start = start;
+        this.end = end;
 
-    while (index < input.length) {
-        const substring = input.slice(index);
-        let matched = false;
-        for (const [type, regex] of Object.entries(token_regex)) {
-            const match = substring.match(regex);
-            if (match) {
-                const value = match[0];
-                tokens.push({ type, value });
-                index += value.length;
-                matched = true;
-                break;
+        this.line = line;
+        this.column = column;
+    }
+}
+
+class Lexer {
+    constructor(input) {
+        this.input = input;
+
+        this.pos = 0;
+        this.line = 1;
+        this.column = 1;
+    }
+
+    move(text) {
+        for (const c of text) {
+            if (c === "\n") {
+                this.line++;
+                this.column = 1;
+            } else {
+                this.column++;
             }
         }
-        if (!matched) {
-            throw new Error(`Unexpected character: ${substring[0]}`);
+        this.pos += text.length;
+    }
+
+    skipSpace() {
+        while (true) {
+            space_regex.lastIndex = this.pos;
+            const match = space_regex.exec(this.input);
+            if (!match) break;
+            this.move(match[0]);
         }
     }
-    return tokens;
+
+    skipComment() {
+        comment_regex.lastIndex = this.pos;
+        const match = comment_regex.exec(this.input);
+        if (!match) return false;
+        this.move(match[0]);
+        return true;
+    }
+
+    skip() {
+        while (true) {
+            const oldPos = this.pos;
+
+            this.skipSpace();
+            this.skipComment();
+
+            if (this.pos === oldPos) break;
+        }
+    }
+
+    createToken(type, value) {
+        const token = new Token(type, value, this.pos, this.pos + value.length, this.line, this.column);
+        this.move(value);
+        return token;
+    }
+
+    nextToken() {
+        this.skip();
+
+        if (this.pos >= this.input.length) return null;
+
+        for (const [type, regex] of token_regex) {
+            regex.lastIndex = this.pos;
+            const match = regex.exec(this.input);
+            if (!match) continue;
+            let value = match[0];
+
+            // \frac -> frac
+            if (type === "COMMAND") value = value.slice(1);
+
+            return this.createToken(type, value);
+        }
+        throw new Error(`Unexpected character '${this.input[this.pos]}' at ${this.line}:${this.column}`);
+    }
+
+    tokenize() {
+        const tokens = [];
+        while (true) {
+            const token = this.nextToken();
+            if (token === null) break;
+
+            tokens.push(token);
+        }
+        return tokens;
+    }
 }
