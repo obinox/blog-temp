@@ -1,125 +1,52 @@
-const token_regex = [
-    ["COMMAND", /\\(?:[a-zA-Z]+|.)/y],
-    ["NUMBER", /\d+(?:\.\d+)?/y],
-    ["IDENTIFIER", /\p{L}/uy],
+import { TOKEN_TYPE } from "./types.js";
 
-    ["LBRACE", /\{/y],
-    ["RBRACE", /\}/y],
-    ["LPAREN", /\(/y],
-    ["RPAREN", /\)/y],
-    ["LBRACKET", /\[/y],
-    ["RBRACKET", /\]/y],
+const SKIP = new Set([TOKEN_TYPE.SPACE, TOKEN_TYPE.COMMENT]);
 
-    ["SUP", /\^/y],
-    ["SUB", /_/y],
+const token_regex = {
+    [TOKEN_TYPE.COMMAND]: /\\(?:[a-zA-Z]+|.)/y,
+    [TOKEN_TYPE.NUMBER]: /\d+(?:\.\d+)?/y,
+    [TOKEN_TYPE.IDENTIFIER]: /\p{L}/uy,
+    [TOKEN_TYPE.LBRACE]: /\{/y,
+    [TOKEN_TYPE.RBRACE]: /\}/y,
+    [TOKEN_TYPE.LPAREN]: /\(/y,
+    [TOKEN_TYPE.RPAREN]: /\)/y,
+    [TOKEN_TYPE.LBRACKET]: /\[/y,
+    [TOKEN_TYPE.RBRACKET]: /\]/y,
+    [TOKEN_TYPE.SUP]: /\^/y,
+    [TOKEN_TYPE.SUB]: /_/y,
+    [TOKEN_TYPE.OPERATOR]: /[+\-*/=<>|,:;!?]/y,
+    [TOKEN_TYPE.ALIGN]: /&/y,
+    [TOKEN_TYPE.SPACE]: /[ \t\r\n]+/y,
+    [TOKEN_TYPE.COMMENT]: /%.*/y,
+    [TOKEN_TYPE.DOLLAR]: /\$/y,
+    [TOKEN_TYPE.TILDE]: /~/y,
+    [TOKEN_TYPE.CHAR]: /./uy,
+};
 
-    ["OPERATOR", /[+\-*/=<>|,:;!?]/y],
-    ["ALIGN", /&/y],
+Object.freeze(token_regex);
 
-    ["DOLLAR", /\$/y],
-    ["TILDE", /~/y],
+export default function lexer(input) {
+    const tokens = [];
+    let index = 0;
 
-    ["CHAR", /./uy],
-];
-
-const space_regex = /\s+/y;
-const comment_regex = /%.*/y;
-
-class Token {
-    constructor(type, value, start, end, line, column) {
-        this.type = type;
-        this.value = value;
-
-        this.start = start;
-        this.end = end;
-
-        this.line = line;
-        this.column = column;
-    }
-}
-
-class Lexer {
-    constructor(input) {
-        this.input = input;
-
-        this.pos = 0;
-        this.line = 1;
-        this.column = 1;
-    }
-
-    move(text) {
-        for (const c of text) {
-            if (c === "\n") {
-                this.line++;
-                this.column = 1;
-            } else {
-                this.column++;
+    while (index < input.length) {
+        let matched = false;
+        for (const [type, regex] of Object.entries(token_regex)) {
+            regex.lastIndex = index;
+            const match = regex.exec(input);
+            if (match) {
+                const value = match[0];
+                if (!SKIP.has(type)) {
+                    tokens.push({ type, value });
+                }
+                index += value.length;
+                matched = true;
+                break;
             }
         }
-        this.pos += text.length;
-    }
-
-    skipSpace() {
-        while (true) {
-            space_regex.lastIndex = this.pos;
-            const match = space_regex.exec(this.input);
-            if (!match) break;
-            this.move(match[0]);
+        if (!matched) {
+            throw new Error(`Unexpected character in position ${index}: ${input[index]}`);
         }
     }
-
-    skipComment() {
-        comment_regex.lastIndex = this.pos;
-        const match = comment_regex.exec(this.input);
-        if (!match) return false;
-        this.move(match[0]);
-        return true;
-    }
-
-    skip() {
-        while (true) {
-            const oldPos = this.pos;
-
-            this.skipSpace();
-            this.skipComment();
-
-            if (this.pos === oldPos) break;
-        }
-    }
-
-    createToken(type, value) {
-        const token = new Token(type, value, this.pos, this.pos + value.length, this.line, this.column);
-        this.move(value);
-        return token;
-    }
-
-    nextToken() {
-        this.skip();
-
-        if (this.pos >= this.input.length) return null;
-
-        for (const [type, regex] of token_regex) {
-            regex.lastIndex = this.pos;
-            const match = regex.exec(this.input);
-            if (!match) continue;
-            let value = match[0];
-
-            // \frac -> frac
-            if (type === "COMMAND") value = value.slice(1);
-
-            return this.createToken(type, value);
-        }
-        throw new Error(`Unexpected character '${this.input[this.pos]}' at ${this.line}:${this.column}`);
-    }
-
-    tokenize() {
-        const tokens = [];
-        while (true) {
-            const token = this.nextToken();
-            if (token === null) break;
-
-            tokens.push(token);
-        }
-        return tokens;
-    }
+    return tokens;
 }

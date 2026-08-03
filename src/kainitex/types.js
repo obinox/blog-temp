@@ -1,10 +1,33 @@
-const TokenType = {
+export const TOKEN_TYPE = Object.freeze({
+    COMMAND: "COMMAND",
     NUMBER: "NUMBER",
-    STRING: "STRING",
+    IDENTIFIER: "IDENTIFIER",
+    LBRACE: "LBRACE",
+    RBRACE: "RBRACE",
+    LPAREN: "LPAREN",
+    RPAREN: "RPAREN",
+    LBRACKET: "LBRACKET",
+    RBRACKET: "RBRACKET",
+    SUP: "SUP",
+    SUB: "SUB",
     OPERATOR: "OPERATOR",
-    PAREN: "PAREN",
-};
+    ALIGN: "ALIGN",
+    SPACE: "SPACE",
+    COMMENT: "COMMENT",
+    DOLLAR: "DOLLAR",
+    TILDE: "TILDE",
+    CHAR: "CHAR",
+});
 
-Object.freeze(TokenType);
-
-export default TokenType;
+export const NODE_TYPE = Object.freeze({
+    ROOT: "ROOT",
+    SEQUENCE: "SEQUENCE",
+    GROUP: "GROUP",
+    NUMBER: "NUMBER",
+    IDENTIFIER: "IDENTIFIER",
+    OPERATOR: "OPERATOR",
+    SCRIPT: "SCRIPT",
+    COMMAND: "COMMAND",
+    ENVIRONMENT: "ENVIRONMENT",
+    ERROR: "ERROR",
+});
