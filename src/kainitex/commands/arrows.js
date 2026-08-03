@@ -1,0 +1,17 @@
+export const arrows = {
+    ["rightarrow"]: { args: 0, optArgs: 0 },
+    ["leftarrow"]: { args: 0, optArgs: 0 },
+    ["Rightarrow"]: { args: 0, optArgs: 0 },
+    ["Leftarrow"]: { args: 0, optArgs: 0 },
+    ["leftrightarrow"]: { args: 0, optArgs: 0 },
+    ["Leftrightarrow"]: { args: 0, optArgs: 0 },
+    ["uparrow"]: { args: 0, optArgs: 0 },
+    ["downarrow"]: { args: 0, optArgs: 0 },
+    ["to"]: { args: 0, optArgs: 0 },
+    ["gets"]: { args: 0, optArgs: 0 },
+    ["mapsto"]: { args: 0, optArgs: 0 },
+    ["hookrightarrow"]: { args: 0, optArgs: 0 },
+    ["longrightarrow"]: { args: 0, optArgs: 0 },
+    ["Longrightarrow"]: { args: 0, optArgs: 0 },
+    ["longleftrightarrow"]: { args: 0, optArgs: 0 },
+};

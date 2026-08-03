@@ -1,5 +1,5 @@
 import { TOKEN_TYPE } from "./types.js";
-import { COMMANDS } from "./commands.js";
+import { COMMANDS } from "./commands/index.js";
 import { RootNode, SequenceNode, GroupNode, NumberNode, IdentifierNode, OperatorNode, ScriptNode, CommandNode, EnvironmentNode, ErrorNode } from "./nodes.js";
 
 class Parser {
