@@ -49,11 +49,12 @@ export class OperatorNode extends Node {
 }
 
 export class ScriptNode extends Node {
-    constructor(base, sup = null, sub = null) {
+    constructor(base, sup = null, sub = null, limits = null) {
         super(NODE_TYPE.SCRIPT);
         this.base = base;
         if (sup !== null) this.sup = sup;
         if (sub !== null) this.sub = sub;
+        if (limits !== null) this.limits = limits;
     }
 }
 
@@ -78,6 +79,16 @@ export class ErrorNode extends Node {
     constructor(message, raw) {
         super(NODE_TYPE.ERROR);
         this.message = message;
-        this.raw = raw;
+        if (raw !== undefined) this.raw = raw;
     }
 }
+
+export class LeftRightNode extends Node {
+    constructor(leftDelim, rightDelim, body = []) {
+        super(NODE_TYPE.LEFTRIGHT);
+        this.leftDelim = leftDelim;
+        this.rightDelim = rightDelim;
+        this.body = body;
+    }
+}
+

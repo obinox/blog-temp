@@ -1,6 +1,6 @@
-import { TOKEN_TYPE } from "./types.js";
+import { TOKEN_TYPE, NODE_TYPE } from "./types.js";
 import { COMMANDS } from "./commands/index.js";
-import { RootNode, SequenceNode, GroupNode, NumberNode, IdentifierNode, OperatorNode, ScriptNode, CommandNode, EnvironmentNode, ErrorNode } from "./nodes.js";
+import { RootNode, SequenceNode, GroupNode, NumberNode, IdentifierNode, OperatorNode, ScriptNode, CommandNode, EnvironmentNode, ErrorNode, LeftRightNode } from "./nodes.js";
 
 class Parser {
     constructor(tokens) {
@@ -31,7 +31,35 @@ class Parser {
             const node = this.parseExpr();
             if (node !== null) children.push(node);
         }
-        return new SequenceNode(children);
+        return new SequenceNode(this.resolveInfixOperators(children));
+    }
+
+    resolveInfixOperators(children) {
+        let infixIdx = -1;
+
+        for (let i = 0; i < children.length; i++) {
+            const node = children[i];
+            if (node.type === NODE_TYPE.COMMAND && COMMANDS[node.name]?.isInfix) {
+                infixIdx = i;
+                break;
+            }
+        }
+
+        if (infixIdx === -1) {
+            return children;
+        }
+
+        const infixNode = children[infixIdx];
+        const leftSide = children.slice(0, infixIdx);
+        const rightSide = children.slice(infixIdx + 1);
+
+        const numNode = new GroupNode(leftSide);
+        const denNode = new GroupNode(rightSide);
+
+        const mapTo = COMMANDS[infixNode.name].mapToPrefix;
+        const resolvedNode = new CommandNode(mapTo, [[numNode], [denNode]]);
+
+        return [resolvedNode];
     }
 
     parseExpr() {
@@ -43,6 +71,16 @@ class Parser {
     parseScript(base) {
         let sup = null;
         let sub = null;
+        let limits = null;
+
+        const nextToken = this.peek();
+        if (nextToken && nextToken.type === TOKEN_TYPE.COMMAND) {
+            const cmdName = nextToken.value.slice(1);
+            if (COMMANDS[cmdName]?.isLimitModifier) {
+                this.consume();
+                limits = cmdName; // "limits" or "nolimits"
+            }
+        }
 
         while (true) {
             const token = this.peek();
@@ -58,8 +96,8 @@ class Parser {
             }
         }
 
-        if (sup === null && sub === null) return base;
-        return new ScriptNode(base, sup, sub);
+        if (sup === null && sub === null && limits === null) return base;
+        return new ScriptNode(base, sup, sub, limits);
     }
 
     parseScriptArg() {
@@ -90,8 +128,33 @@ class Parser {
             case TOKEN_TYPE.LBRACE:
                 return this.parseGroup();
 
-            case TOKEN_TYPE.COMMAND:
+            case TOKEN_TYPE.COMMAND: {
+                const cmdName = token.value.slice(1);
+                const spec = COMMANDS[cmdName];
+                if (spec?.isLeft) {
+                    return this.parseLeftRight();
+                }
+                if (spec?.isRight) {
+                    this.consume();
+                    return new ErrorNode(`unmatched \\${cmdName}`, token.value);
+                }
                 return this.parseCommand();
+            }
+
+            case TOKEN_TYPE.LPAREN:
+            case TOKEN_TYPE.RPAREN:
+            case TOKEN_TYPE.LBRACKET:
+            case TOKEN_TYPE.RBRACKET:
+                this.consume();
+                return new OperatorNode(token.value);
+
+            case TOKEN_TYPE.CHAR:
+                this.consume();
+                return new IdentifierNode(token.value);
+
+            case TOKEN_TYPE.TILDE:
+                this.consume();
+                return new OperatorNode(token.value);
 
             default:
                 this.consume();
@@ -106,28 +169,76 @@ class Parser {
         return new GroupNode(seq.children);
     }
 
+    parseLeftRight() {
+        const leftToken = this.consume(); // consume \left (or equivalent left marker)
+        const leftCmd = leftToken.value.slice(1);
+
+        const leftDelimToken = this.peek();
+        if (!leftDelimToken) {
+            return new ErrorNode(`Expect delimiter after \\${leftCmd}`);
+        }
+
+        const allowedDelimTypes = new Set([TOKEN_TYPE.OPERATOR, TOKEN_TYPE.IDENTIFIER, TOKEN_TYPE.COMMAND, TOKEN_TYPE.CHAR, TOKEN_TYPE.LPAREN, TOKEN_TYPE.RPAREN, TOKEN_TYPE.LBRACKET, TOKEN_TYPE.RBRACKET, TOKEN_TYPE.LBRACE, TOKEN_TYPE.RBRACE]);
+
+        if (!allowedDelimTypes.has(leftDelimToken.type)) {
+            return new ErrorNode(`Invalid delimiter after \\${leftCmd}: ${leftDelimToken.value}`);
+        }
+
+        const leftDelim = leftDelimToken.value;
+        this.consume(); // consume left delimiter
+
+        const body = [];
+        let foundRight = false;
+
+        while (this.pos < this.tokens.length) {
+            const token = this.peek();
+            if (!token) break;
+
+            if (token.type === TOKEN_TYPE.COMMAND) {
+                const cmdName = token.value.slice(1);
+                if (COMMANDS[cmdName]?.isRight) {
+                    this.consume(); // consume \right
+                    foundRight = true;
+                    break;
+                }
+            }
+
+            const node = this.parseExpr();
+            if (node !== null) {
+                body.push(node);
+            }
+        }
+
+        if (!foundRight) {
+            return new ErrorNode(`Missing matching right delimiter for \\${leftCmd}`);
+        }
+
+        const rightDelimToken = this.peek();
+        if (!rightDelimToken || !allowedDelimTypes.has(rightDelimToken.type)) {
+            return new ErrorNode("Expect delimiter after \\right");
+        }
+
+        const rightDelim = rightDelimToken.value;
+        this.consume(); // consume right delimiter
+
+        return new LeftRightNode(leftDelim, rightDelim, body);
+    }
+
     parseCommand() {
         const token = this.consume(); // COMMAND
         const name = token.value.slice(1); // strip leading backslash
 
-        const matrixCommands = new Set([
-            "matrix", "pmatrix", "bmatrix", "vmatrix", "Vmatrix", "cases", "align", "gather", "array"
-        ]);
-
         if (name === "begin") return this.parseEnvironment();
 
-        if (matrixCommands.has(name)) {
+        const spec = COMMANDS[name] ?? { args: 0, optArgs: 0 };
+
+        if (spec.isEnv) {
             if (this.peek()?.type === TOKEN_TYPE.LBRACE) {
                 return this.parseMatrixCommand(name);
             } else {
-                return new ErrorNode(
-                    `Command \\${name} expects content enclosed in curly braces {}`,
-                    this.peek()?.value ?? ""
-                );
+                return new ErrorNode(`Command \\${name} expects content enclosed in curly braces {}`, this.peek()?.value ?? "");
             }
         }
-
-        const spec = COMMANDS[name] ?? { args: 0, optArgs: 0 };
 
         let optArg = null;
         if (spec.optArgs > 0 && this.peek()?.type === TOKEN_TYPE.LBRACKET) {
@@ -144,10 +255,7 @@ class Parser {
                 args.push(group.children);
             } else {
                 const nextToken = this.peek();
-                return new ErrorNode(
-                    `Command \\${name} expects argument enclosed in curly braces {}`,
-                    nextToken ? nextToken.value : ""
-                );
+                return new ErrorNode(`Command \\${name} expects argument enclosed in curly braces {}`, nextToken ? nextToken.value : "");
             }
         }
 
@@ -169,12 +277,15 @@ class Parser {
                 break;
             }
 
-            if (token.type === TOKEN_TYPE.COMMAND && token.value === "\\\\") {
-                this.consume();
-                row++;
-                col = 0;
-                rows.push([[]]);
-                continue;
+            if (token.type === TOKEN_TYPE.COMMAND) {
+                const cmdName = token.value.slice(1);
+                if (COMMANDS[cmdName]?.isNewLine) {
+                    this.consume();
+                    row++;
+                    col = 0;
+                    rows.push([[]]);
+                    continue;
+                }
             }
 
             if (token.type === TOKEN_TYPE.ALIGN) {
@@ -219,12 +330,15 @@ class Parser {
                 break;
             }
 
-            if (token.type === TOKEN_TYPE.COMMAND && token.value === "\\\\") {
-                this.consume();
-                row++;
-                col = 0;
-                rows.push([[]]);
-                continue;
+            if (token.type === TOKEN_TYPE.COMMAND) {
+                const cmdName = token.value.slice(1);
+                if (COMMANDS[cmdName]?.isNewLine) {
+                    this.consume();
+                    row++;
+                    col = 0;
+                    rows.push([[]]);
+                    continue;
+                }
             }
 
             if (token.type === TOKEN_TYPE.ALIGN) {

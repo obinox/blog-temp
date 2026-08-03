@@ -29,5 +29,6 @@ export const NODE_TYPE = Object.freeze({
     SCRIPT: "SCRIPT",
     COMMAND: "COMMAND",
     ENVIRONMENT: "ENVIRONMENT",
+    LEFTRIGHT: "LEFTRIGHT",
     ERROR: "ERROR",
 });

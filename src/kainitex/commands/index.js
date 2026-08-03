@@ -7,6 +7,7 @@ import { relations } from "./relations.js";
 import { arrows } from "./arrows.js";
 import { functions } from "./functions.js";
 import { delimitersMisc } from "./delimiters_misc.js";
+import { environments } from "./environments.js";
 
 export const COMMANDS = Object.freeze({
     ...fractionsRoots,
@@ -18,4 +19,5 @@ export const COMMANDS = Object.freeze({
     ...arrows,
     ...functions,
     ...delimitersMisc,
+    ...environments,
 });
