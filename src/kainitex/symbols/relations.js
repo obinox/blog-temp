@@ -1,0 +1,123 @@
+export const relations = {
+    // Basic comparisons
+    leq: "≤",
+    geq: "≥",
+    neq: "≠",
+    ll: "≪",
+    gg: "≫",
+    lll: "⋘",
+    ggg: "⋙",
+    leqq: "≦",
+    geqq: "≧",
+    leqslant: "⩽",
+    geqslant: "⩾",
+    lessgtr: "≶",
+    gtrless: "≷",
+
+    // Similarity / approximation
+    approx: "≈",
+    approxeq: "≊",
+    sim: "∼",
+    simeq: "≃",
+    equiv: "≡",
+    cong: "≅",
+    asymp: "≍",
+    doteq: "≐",
+    doteqdot: "≑",
+    lesssim: "≲",
+    gtrsim: "≳",
+
+    // Set relations
+    subset: "⊂",
+    supset: "⊃",
+    subseteq: "⊆",
+    supseteq: "⊇",
+    subseteqq: "⫅",
+    supseteqq: "⫆",
+    Subset: "⋐",
+    Supset: "⋑",
+    sqsubset: "⊏",
+    sqsupset: "⊐",
+    sqsubseteq: "⊑",
+    sqsupseteq: "⊒",
+    in: "∈",
+    notin: "∉",
+    ni: "∋",
+
+    // Order relations
+    prec: "≺",
+    succ: "≻",
+    preceq: "⪯",
+    succeq: "⪰",
+    precsim: "≾",
+    succsim: "≿",
+    preccurlyeq: "≼",
+    succcurlyeq: "≽",
+    curlyeqprec: "⋞",
+    curlyeqsucc: "⋟",
+
+    // Proportionality / perpendicularity
+    propto: "∝",
+    perp: "⊥",
+    mid: "∣",
+    parallel: "∥",
+    shortmid: "∣",
+    shortparallel: "∥",
+    between: "≬",
+    pitchfork: "⋔",
+
+    // Turnstiles
+    vdash: "⊢",
+    dashv: "⊣",
+    Vdash: "⊩",
+    valign: "⊨",
+    models: "⊧",
+
+    // Triangles
+    triangleleft: "◁",
+    triangleright: "▷",
+    trianglelefteq: "⊴",
+    trianglerighteq: "⊵",
+
+    // Logical implications
+    impliedby: "⟸",
+    implies: "⟹",
+    iff: "⟺",
+
+    // Aliases
+    le: "≤",
+    ge: "≥",
+    ne: "≠",
+    owns: "∋",
+
+    // Negated relations
+    nleq: "≰",
+    ngeq: "≱",
+    nsubseteq: "⊈",
+    nsupseteq: "⊉",
+    subsetneq: "⊊",
+    supsetneq: "⊋",
+    subsetneqq: "⫋",
+    supsetneqq: "⫌",
+    nprec: "⊀",
+    nsucc: "⊁",
+    npreceq: "⪯̸",
+    nsucceq: "⪰̸",
+    ncong: "≇",
+    nsim: "≁",
+    nmid: "∤",
+    nparallel: "",
+    ntriangleleft: "⋪",
+    ntriangleright: "⋫",
+    ntrianglelefteq: "⋬",
+    ntrianglerighteq: "⋭",
+
+    // Colonequals package
+    coloneq: "≔",
+    Coloneq: "⩴",
+    coloneqq: "≔",
+    Coloneqq: "⩴",
+    eqcolon: "≕",
+    Eqcolon: "≕",
+    coloncolon: "∷",
+};

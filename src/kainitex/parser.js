@@ -1,6 +1,8 @@
 import { TOKEN_TYPE, NODE_TYPE } from "./types.js";
-import { COMMANDS } from "./commands/index.js";
+import { COMMANDS } from "./commands.js";
 import { RootNode, SequenceNode, GroupNode, NumberNode, IdentifierNode, OperatorNode, ScriptNode, CommandNode, EnvironmentNode, ErrorNode, LeftRightNode } from "./nodes.js";
+
+const ALLOWED_DELIMITER_TYPES = Object.freeze(new Set([TOKEN_TYPE.OPERATOR, TOKEN_TYPE.IDENTIFIER, TOKEN_TYPE.COMMAND, TOKEN_TYPE.CHAR, TOKEN_TYPE.LPAREN, TOKEN_TYPE.RPAREN, TOKEN_TYPE.LBRACKET, TOKEN_TYPE.RBRACKET, TOKEN_TYPE.LBRACE, TOKEN_TYPE.RBRACE]));
 
 class Parser {
     constructor(tokens) {
@@ -132,7 +134,7 @@ class Parser {
                 const cmdName = token.value.slice(1);
                 const spec = COMMANDS[cmdName];
                 if (spec?.isLeft) {
-                    return this.parseLeftRight();
+                    return this.parseLR();
                 }
                 if (spec?.isRight) {
                     this.consume();
@@ -169,7 +171,7 @@ class Parser {
         return new GroupNode(seq.children);
     }
 
-    parseLeftRight() {
+    parseLR() {
         const leftToken = this.consume(); // consume \left (or equivalent left marker)
         const leftCmd = leftToken.value.slice(1);
 
@@ -178,9 +180,7 @@ class Parser {
             return new ErrorNode(`Expect delimiter after \\${leftCmd}`);
         }
 
-        const allowedDelimTypes = new Set([TOKEN_TYPE.OPERATOR, TOKEN_TYPE.IDENTIFIER, TOKEN_TYPE.COMMAND, TOKEN_TYPE.CHAR, TOKEN_TYPE.LPAREN, TOKEN_TYPE.RPAREN, TOKEN_TYPE.LBRACKET, TOKEN_TYPE.RBRACKET, TOKEN_TYPE.LBRACE, TOKEN_TYPE.RBRACE]);
-
-        if (!allowedDelimTypes.has(leftDelimToken.type)) {
+        if (!ALLOWED_DELIMITER_TYPES.has(leftDelimToken.type)) {
             return new ErrorNode(`Invalid delimiter after \\${leftCmd}: ${leftDelimToken.value}`);
         }
 
@@ -214,7 +214,7 @@ class Parser {
         }
 
         const rightDelimToken = this.peek();
-        if (!rightDelimToken || !allowedDelimTypes.has(rightDelimToken.type)) {
+        if (!rightDelimToken || !ALLOWED_DELIMITER_TYPES.has(rightDelimToken.type)) {
             return new ErrorNode("Expect delimiter after \\right");
         }
 
@@ -228,13 +228,13 @@ class Parser {
         const token = this.consume(); // COMMAND
         const name = token.value.slice(1); // strip leading backslash
 
-        if (name === "begin") return this.parseEnvironment();
+        if (name === "begin") return this.parseEnv();
 
         const spec = COMMANDS[name] ?? { args: 0, optArgs: 0 };
 
         if (spec.isEnv) {
             if (this.peek()?.type === TOKEN_TYPE.LBRACE) {
-                return this.parseMatrixCommand(name);
+                return this.parseMatrix(name);
             } else {
                 return new ErrorNode(`Command \\${name} expects content enclosed in curly braces {}`, this.peek()?.value ?? "");
             }
@@ -262,7 +262,7 @@ class Parser {
         return new CommandNode(name, args, optArg);
     }
 
-    parseMatrixCommand(name) {
+    parseMatrix(name) {
         this.consume(); // {
         const rows = [[[]]];
         let row = 0;
@@ -302,7 +302,7 @@ class Parser {
         return new EnvironmentNode(name, rows);
     }
 
-    parseEnvironment() {
+    parseEnv() {
         let envName = "";
         if (this.peek()?.type === TOKEN_TYPE.LBRACE) {
             this.consume(); // LBRACE ( { )
