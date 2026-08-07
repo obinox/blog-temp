@@ -1,5 +1,4 @@
-export const greek = {
-    // Lowercase Greek letters
+const lowercaseGreek = {
     alpha: "α",
     beta: "β",
     gamma: "γ",
@@ -24,8 +23,9 @@ export const greek = {
     chi: "χ",
     psi: "ψ",
     omega: "ω",
+};
 
-    // Lowercase Greek variants
+const variantGreek = {
     varepsilon: "ε",
     vartheta: "ϑ",
     varkappa: "ϰ",
@@ -34,8 +34,9 @@ export const greek = {
     varsigma: "ς",
     varphi: "φ",
     varbeta: "ϐ",
+};
 
-    // Uppercase Greek letters
+const uppercaseGreek = {
     Alpha: "Α",
     Beta: "Β",
     Gamma: "Γ",
@@ -60,8 +61,9 @@ export const greek = {
     Chi: "Χ",
     Psi: "Ψ",
     Omega: "Ω",
+};
 
-    // Archaic / special Greek
+const specialGreek = {
     digamma: "ϝ",
     Digamma: "Ϝ",
     varGamma: "𝛤",
@@ -75,4 +77,11 @@ export const greek = {
     varPhi: "𝛷",
     varPsi: "𝛹",
     varOmega: "𝛺",
+};
+
+export const greek = {
+    ...lowercaseGreek,
+    ...variantGreek,
+    ...uppercaseGreek,
+    ...specialGreek,
 };

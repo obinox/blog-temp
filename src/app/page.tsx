@@ -1,10 +1,8 @@
 "use client";
 
-import React from "react";
 import { kainitex } from "../kainitex";
 import { COMMAND_LATEX_MAP } from "./commandMap";
 
-// Command -> LaTeX Code mapping data structure (supports single string or array of test cases)
 const TEST_CASES: Record<string, string | string[]> = COMMAND_LATEX_MAP;
 
 export default function Home() {
@@ -12,7 +10,7 @@ export default function Home() {
 
     return (
         <main style={{ padding: "16px" }}>
-            <h1>Kainitex Test Suite ({entries.length} Symbols)</h1>
+            <h1>Kainitex Test Suite ({entries.length} Cases)</h1>
 
             <div style={{ marginBottom: "16px", padding: "10px 14px", border: "1px solid #ccc", borderRadius: "6px", display: "inline-block", background: "#fafafa" }}>
                 <strong>MathML Element Type Legend: </strong>
@@ -38,8 +36,9 @@ export default function Home() {
                             let rendered = "";
                             try {
                                 rendered = kainitex(latex);
-                            } catch (e: any) {
-                                rendered = `<span style="color: #ef4444;">Error: ${e.message}</span>`;
+                            } catch (e: unknown) {
+                                const message = e instanceof Error ? e.message : String(e);
+                                rendered = `<span style="color: #ef4444;">Error: ${message}</span>`;
                             }
 
                             return (

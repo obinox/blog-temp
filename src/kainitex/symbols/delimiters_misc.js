@@ -1,35 +1,39 @@
-export const delimitersMisc = {
-    // Calculus / analysis
+const calculusSymbols = {
     infty: "∞",
     partial: "∂",
     nabla: "∇",
+};
 
-    // Logic / quantifiers
+const quantifierSymbols = {
     forall: "∀",
     exists: "∃",
     nexists: "∄",
     top: "⊤",
     bot: "⊥",
+};
 
-    // Set theory / Empty sets
+const emptySetSymbols = {
     emptyset: "∅",
     varnothing: "⌀",
+};
 
-    // Ellipsis dots
+const ellipsisSymbols = {
     ldots: "…",
     cdots: "⋯",
     vdots: "⋮",
     ddots: "⋱",
     hdots: "⋯",
     iddots: "⋰",
+};
 
-    // Hebrew letters
+const hebrewSymbols = {
     aleph: "ℵ",
     beth: "ℶ",
     gimel: "ℷ",
     daleth: "ℸ",
+};
 
-    // Special variables / constants
+const constantSymbols = {
     hbar: "ℏ",
     hslash: "ℏ",
     ell: "ℓ",
@@ -37,8 +41,9 @@ export const delimitersMisc = {
     Im: "ℑ",
     wp: "℘",
     complement: "∁",
+};
 
-    // Geometric
+const geometricSymbols = {
     angle: "∠",
     degree: "°",
     square: "□",
@@ -46,28 +51,51 @@ export const delimitersMisc = {
     triangle: "△",
     lozenge: "◊",
     blacklozenge: "⧫",
+};
 
-    // Slashes
+const slashSymbols = {
     backslash: "\\",
+};
 
-    // Card suits
+const cardSuitSymbols = {
     clubsuit: "♣",
     diamondsuit: "♢",
     heartsuit: "♡",
     spadesuit: "♠",
+};
 
-    // Transforms
+const transformSymbols = {
     laplace: "ℒ",
     Fourier: "ℱ",
     fourier: "ℱ",
     Mellin: "ℳ",
     mellin: "ℳ",
+};
 
-    // Typography / spacing
+const spacingSymbols = {
     quad: " ",
     qquad: "  ",
     thinspace: " ",
     medspace: " ",
     thickspace: " ",
     negthinspace: "‌",
+};
+
+constantSymbols.hslash = constantSymbols.hbar;
+ellipsisSymbols.hdots = ellipsisSymbols.cdots;
+transformSymbols.fourier = transformSymbols.Fourier;
+transformSymbols.mellin = transformSymbols.Mellin;
+
+export const delimitersMisc = {
+    ...calculusSymbols,
+    ...quantifierSymbols,
+    ...emptySetSymbols,
+    ...ellipsisSymbols,
+    ...hebrewSymbols,
+    ...constantSymbols,
+    ...geometricSymbols,
+    ...slashSymbols,
+    ...cardSuitSymbols,
+    ...transformSymbols,
+    ...spacingSymbols,
 };

@@ -1,5 +1,5 @@
 import { NODE_TYPE } from "../../types.js";
-import { root, mrowNode, mnNode, miNode, moNode, leftrightTemplate, tableTemplate, errorTemplate, scriptTemplate, mtable } from "../templates/index.js";
+import { root, mrowNode, mnNode, miNode, moNode, leftrightTemplate, tableTemplate, errorTemplate, scriptTemplate, mstyle, mtable } from "../templates/index.js";
 import { environment_mapping } from "./environments.js";
 
 export const nodeMapping = {
@@ -12,6 +12,13 @@ export const nodeMapping = {
     [NODE_TYPE.LEFTRIGHT]: (node, render) => leftrightTemplate(node, render),
     [NODE_TYPE.ERROR]: (node, render) => errorTemplate(node, render),
     [NODE_TYPE.SCRIPT]: (node, render) => scriptTemplate(node, render),
+    [NODE_TYPE.STYLE]: (node, render) => {
+        const attrs = {
+            displaystyle: node.value === "displaystyle" ? "true" : node.value === "textstyle" ? "false" : undefined,
+            scriptlevel: node.value === "scriptstyle" ? "1" : node.value === "scriptscriptstyle" ? "2" : undefined,
+        };
+        return mstyle(node.children.map((child) => render(child)).join(""), attrs);
+    },
     [NODE_TYPE.ENVIRONMENT]: (node, render) => {
         const envRenderer = environment_mapping[node.value] || ((n, r) => mtable(tableTemplate(n, r)));
         return envRenderer(node, render);

@@ -1,5 +1,4 @@
-export const operators = {
-    // Basic binary operators
+const basicOperators = {
     pm: "±",
     mp: "∓",
     times: "×",
@@ -11,8 +10,9 @@ export const operators = {
     bullet: "∙",
     diamond: "⋄",
     centerdot: "·",
+};
 
-    // Circled operators
+const circledOperators = {
     oplus: "⊕",
     ominus: "⊖",
     otimes: "⊗",
@@ -21,25 +21,25 @@ export const operators = {
     circledast: "",
     circledcirc: "⊚",
     circleddash: "⊝",
+};
 
-    // Boxed operators
+const boxedOperators = {
     boxplus: "⊞",
     boxminus: "⊟",
     boxtimes: "⊠",
     boxdot: "⊡",
     box: "□",
+};
 
-    // Logic operators
+const logicOperators = {
     wedge: "∧",
     vee: "∨",
-    land: "∧",
-    lor: "∨",
-    lnot: "¬",
     neg: "¬",
     barwedge: "⊼",
     veebar: "⊻",
+};
 
-    // Set operators
+const setOperators = {
     cap: "∩",
     cup: "∪",
     Cap: "⋒",
@@ -48,27 +48,27 @@ export const operators = {
     sqcup: "⊔",
     uplus: "⊎",
     setminus: "∖",
+};
 
-    // Product-like operators
+const productOperators = {
     ltimes: "⋉",
     rtimes: "⋊",
     leftthreetimes: "⋋",
     rightthreetimes: "⋌",
+};
 
-    // Daggers / misc
+const miscOperators = {
     dagger: "†",
     ddagger: "‡",
-    dag: "†",
-    ddag: "‡",
     amalg: "⨿",
     wr: "≀",
+};
 
-    // Large operators
+const largeOperators = {
     sum: "∑",
     prod: "∏",
     coprod: "∐",
     int: "∫",
-    integral: "∫",
     iint: "∬",
     iiint: "∭",
     iiiint: "⨌",
@@ -77,8 +77,9 @@ export const operators = {
     oiiint: "∰",
     ointctrclockwise: "∳",
     ointclockwise: "∲",
+};
 
-    // Large set/logic operators
+const largeSetLogicOperators = {
     bigvee: "⋁",
     bigwedge: "⋀",
     bigcup: "⋃",
@@ -89,4 +90,32 @@ export const operators = {
     bigsqcup: "⨆",
     bigsqcap: "⨅",
     biguplus: "⨄",
+};
+
+const aliasOperators = {
+    land: logicOperators.wedge,
+    lor: logicOperators.vee,
+    lnot: logicOperators.neg,
+    dag: miscOperators.dagger,
+    ddag: miscOperators.ddagger,
+};
+
+const aliasLargeOperators = {
+    integral: largeOperators.int,
+    ointccw: largeOperators.ointctrclockwise,
+    ointcw: largeOperators.ointclockwise,
+};
+
+export const operators = {
+    ...basicOperators,
+    ...circledOperators,
+    ...boxedOperators,
+    ...logicOperators,
+    ...setOperators,
+    ...productOperators,
+    ...miscOperators,
+    ...largeOperators,
+    ...largeSetLogicOperators,
+    ...aliasOperators,
+    ...aliasLargeOperators,
 };

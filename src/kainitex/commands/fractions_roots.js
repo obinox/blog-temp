@@ -18,7 +18,6 @@ export const fractionsRoots = {
     ["choose"]: { args: 0, optArgs: 0, isInfix: true, mapToPrefix: "binom" }, // infix binomial (legacy TeX: n \choose k)
 
     // Generalized fractions
-    ["genfrac"]: { args: 6, optArgs: 0 }, // generalized fraction {ldelim}{rdelim}{thickness}{style}{num}{den}
     ["above"]: { args: 0, optArgs: 0, isInfix: true, mapToPrefix: "above" }, // infix fraction with custom rule thickness
     ["atop"]: { args: 0, optArgs: 0, isInfix: true, mapToPrefix: "atop" }, // infix fraction without rule line
     ["over"]: { args: 0, optArgs: 0, isInfix: true, mapToPrefix: "frac" }, // infix fraction (legacy TeX: a \over b)

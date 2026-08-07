@@ -1,5 +1,4 @@
-export const arrows = {
-    // Extensible arrows
+const extensibleArrows = {
     xrightarrow: "→",
     xleftarrow: "←",
     xLeftarrow: "⇐",
@@ -18,7 +17,9 @@ export const arrows = {
     xleftharpoondown: "↽",
     xrightleftharpoons: "⇌",
     xleftrightharpoons: "⇋",
-    // Basic arrows
+};
+
+const basicArrows = {
     rightarrow: "→",
     leftarrow: "←",
     Rightarrow: "⇒",
@@ -31,35 +32,40 @@ export const arrows = {
     Downarrow: "⇓",
     updownarrow: "↕",
     Updownarrow: "⇕",
+};
 
-    // Aliases
-    to: "→",
-    gets: "←",
-    mapsto: "↦",
+const arrowAliases = {
+    to: basicArrows.rightarrow,
+    gets: basicArrows.leftarrow,
+    mapsto: extensibleArrows.xmapsto,
+};
 
-    // Diagonal
+const diagonalArrows = {
     nearrow: "↗",
     searrow: "↘",
     nwarrow: "↖",
     swarrow: "↙",
+};
 
-    // Harpoons
+const harpoonArrows = {
     rightharpoonup: "⇀",
     rightharpoondown: "⇁",
     leftharpoonup: "↼",
     leftharpoondown: "↽",
     rightleftharpoons: "⇌",
     leftrightharpoons: "⇋",
+};
 
-    // Hooked / twohead
+const hookedTwoheadArrows = {
     hookrightarrow: "↪",
     hookleftarrow: "↩",
     twoheadrightarrow: "↠",
     twoheadleftarrow: "↞",
     rightarrowtail: "↣",
     leftarrowtail: "↢",
+};
 
-    // Long arrows
+const longArrows = {
     longrightarrow: "⟶",
     longleftarrow: "⟵",
     longleftrightarrow: "⟷",
@@ -67,8 +73,9 @@ export const arrows = {
     Longleftarrow: "⟸",
     Longleftrightarrow: "⟺",
     longmapsto: "⟼",
+};
 
-    // Dashed / curved
+const curvedArrows = {
     curvearrowright: "↷",
     curvearrowleft: "↶",
     circlearrowright: "↻",
@@ -79,12 +86,25 @@ export const arrows = {
     leftrightsquigarrow: "↭",
     leadsto: "⇝",
     multimap: "⊸",
+};
 
-    // Negated
+const negatedArrows = {
     nrightarrow: "↛",
-    nleftarrow: "↚", //
+    nleftarrow: "↚",
     nRightarrow: "⇏",
     nLeftarrow: "⇍",
     nleftrightarrow: "↮",
     nLeftrightarrow: "⇎",
+};
+
+export const arrows = {
+    ...extensibleArrows,
+    ...basicArrows,
+    ...arrowAliases,
+    ...diagonalArrows,
+    ...harpoonArrows,
+    ...hookedTwoheadArrows,
+    ...longArrows,
+    ...curvedArrows,
+    ...negatedArrows,
 };

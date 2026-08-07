@@ -30,6 +30,7 @@ export const NODE_TYPE = Object.freeze({
     COMMAND: "COMMAND",
     ENVIRONMENT: "ENVIRONMENT",
     LEFTRIGHT: "LEFTRIGHT",
+    STYLE: "STYLE",
     ERROR: "ERROR",
 });
 

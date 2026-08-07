@@ -1,6 +1,6 @@
 import { TOKEN_TYPE, NODE_TYPE, ALLOWED_DELIMITER_TYPES } from "./types.js";
 import { COMMANDS } from "./commands.js";
-import { RootNode, SequenceNode, GroupNode, NumberNode, IdentifierNode, OperatorNode, ScriptNode, CommandNode, EnvironmentNode, ErrorNode, LeftRightNode } from "./nodes.js";
+import { RootNode, SequenceNode, GroupNode, NumberNode, IdentifierNode, OperatorNode, ScriptNode, CommandNode, EnvironmentNode, StyleNode, ErrorNode, LeftRightNode } from "./nodes.js";
 
 class Parser {
     constructor(tokens) {
@@ -28,6 +28,15 @@ class Parser {
             if (!token) break;
             if (stopType && token.type === stopType) break;
             if (token.type === TOKEN_TYPE.RBRACE) break;
+            if (token.type === TOKEN_TYPE.COMMAND) {
+                const cmdName = token.value.slice(1);
+                if (COMMANDS[cmdName]?.isStyle) {
+                    this.consume();
+                    const styledSeq = this.parseSequence(stopType);
+                    children.push(new StyleNode(cmdName, styledSeq.children));
+                    break;
+                }
+            }
             const node = this.parseExpr();
             if (node !== null) children.push(node);
         }
@@ -39,7 +48,7 @@ class Parser {
 
         for (let i = 0; i < children.length; i++) {
             const node = children[i];
-            if (node.type === NODE_TYPE.COMMAND && COMMANDS[node.name]?.isInfix) {
+            if (node.type === NODE_TYPE.COMMAND && COMMANDS[node.value]?.isInfix) {
                 infixIdx = i;
                 break;
             }
@@ -56,7 +65,7 @@ class Parser {
         const numNode = new GroupNode(leftSide);
         const denNode = new GroupNode(rightSide);
 
-        const mapTo = COMMANDS[infixNode.name].mapToPrefix;
+        const mapTo = COMMANDS[infixNode.value].mapToPrefix;
         const resolvedNode = new CommandNode(mapTo, [[numNode], [denNode]]);
 
         return [resolvedNode];

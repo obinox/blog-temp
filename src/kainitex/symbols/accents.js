@@ -1,4 +1,4 @@
-export const accents = {
+const basicAccents = {
     hat: "^",
     check: "ˇ",
     breve: "˘",
@@ -12,6 +12,9 @@ export const accents = {
     dddot: "⋯",
     ddddot: "⋰",
     mathring: "˚",
+};
+
+const wideAccents = {
     widehat: "^",
     widetilde: "~",
     widecheck: "ˇ",
@@ -20,15 +23,28 @@ export const accents = {
     underline: "_",
     overbrace: "⏞",
     underbrace: "⏟",
+};
+
+const groupAccents = {
     overgroup: "⏜",
     undergroup: "⏝",
     overparen: "⌒",
     underparen: "‿",
     utilde: "~",
+};
+
+const arrowAccents = {
     overleftarrow: "←",
     overrightarrow: "→",
     overleftrightarrow: "↔",
     underleftarrow: "←",
     underrightarrow: "→",
     underleftrightarrow: "↔",
+};
+
+export const accents = {
+    ...basicAccents,
+    ...wideAccents,
+    ...groupAccents,
+    ...arrowAccents,
 };

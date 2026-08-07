@@ -1,8 +1,8 @@
 import { binomTemplate } from "../templates/index.js";
 
 export const binomMapping = {
-    binom: (node, render) => binomTemplate(node, render),
+    binom: (node, render, context) => binomTemplate(node, render, context.displaystyle),
     dbinom: (node, render) => binomTemplate(node, render, "true"),
     tbinom: (node, render) => binomTemplate(node, render, "false"),
-    choose: (node, render) => binomTemplate(node, render),
+    choose: (node, render, context) => binomTemplate(node, render, context.displaystyle),
 };

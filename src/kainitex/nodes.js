@@ -77,6 +77,14 @@ export class EnvironmentNode extends Node {
     }
 }
 
+export class StyleNode extends Node {
+    constructor(value, children = []) {
+        super(NODE_TYPE.STYLE);
+        this.value = value;
+        this.children = children;
+    }
+}
+
 export class ErrorNode extends Node {
     constructor(message, raw) {
         super(NODE_TYPE.ERROR);

@@ -1,5 +1,4 @@
-export const relations = {
-    // Basic comparisons
+const comparisonRelations = {
     leq: "≤",
     geq: "≥",
     neq: "≠",
@@ -13,8 +12,9 @@ export const relations = {
     geqslant: "⩾",
     lessgtr: "≶",
     gtrless: "≷",
+};
 
-    // Similarity / approximation
+const similarityRelations = {
     approx: "≈",
     approxeq: "≊",
     sim: "∼",
@@ -26,8 +26,9 @@ export const relations = {
     doteqdot: "≑",
     lesssim: "≲",
     gtrsim: "≳",
+};
 
-    // Set relations
+const setRelations = {
     subset: "⊂",
     supset: "⊃",
     subseteq: "⊆",
@@ -43,8 +44,9 @@ export const relations = {
     in: "∈",
     notin: "∉",
     ni: "∋",
+};
 
-    // Order relations
+const orderRelations = {
     prec: "≺",
     succ: "≻",
     preceq: "⪯",
@@ -55,8 +57,9 @@ export const relations = {
     succcurlyeq: "≽",
     curlyeqprec: "⋞",
     curlyeqsucc: "⋟",
+};
 
-    // Proportionality / perpendicularity
+const geometryRelations = {
     propto: "∝",
     perp: "⊥",
     mid: "∣",
@@ -65,32 +68,37 @@ export const relations = {
     shortparallel: "∥",
     between: "≬",
     pitchfork: "⋔",
+};
 
-    // Turnstiles
+const turnstileRelations = {
     vdash: "⊢",
     dashv: "⊣",
     Vdash: "⊩",
     valign: "⊨",
     models: "⊧",
+};
 
-    // Triangles
+const triangleRelations = {
     triangleleft: "◁",
     triangleright: "▷",
     trianglelefteq: "⊴",
     trianglerighteq: "⊵",
+};
 
-    // Logical implications
+const implicationRelations = {
     impliedby: "⟸",
     implies: "⟹",
     iff: "⟺",
+};
 
-    // Aliases
-    le: "≤",
-    ge: "≥",
-    ne: "≠",
-    owns: "∋",
+const relationAliases = {
+    le: comparisonRelations.leq,
+    ge: comparisonRelations.geq,
+    ne: comparisonRelations.neq,
+    owns: setRelations.ni,
+};
 
-    // Negated relations
+const negatedRelations = {
     nleq: "≰",
     ngeq: "≱",
     nsubseteq: "⊈",
@@ -111,8 +119,9 @@ export const relations = {
     ntriangleright: "⋫",
     ntrianglelefteq: "⋬",
     ntrianglerighteq: "⋭",
+};
 
-    // Colonequals package
+const colonequalsRelations = {
     coloneq: "≔",
     Coloneq: "⩴",
     coloneqq: "≔",
@@ -120,4 +129,18 @@ export const relations = {
     eqcolon: "≕",
     Eqcolon: "≕",
     coloncolon: "∷",
+};
+
+export const relations = {
+    ...comparisonRelations,
+    ...similarityRelations,
+    ...setRelations,
+    ...orderRelations,
+    ...geometryRelations,
+    ...turnstileRelations,
+    ...triangleRelations,
+    ...implicationRelations,
+    ...relationAliases,
+    ...negatedRelations,
+    ...colonequalsRelations,
 };

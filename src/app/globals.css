@@ -12,3 +12,13 @@ math mn {
     color: #d97706 !important; /* Number (<mn>): Amber / Orange */
     font-weight: 600;
 }
+
+html {
+    --font-family: "Noto Sans KR";
+    --font-size: 16px;
+    --background-color: #050505;
+    --main-color: #07c395;
+    --main-color-hover: #0f9e7f;
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+}

@@ -8,7 +8,6 @@ export const fracMapping = {
     sfrac: (node, render) => fracTemplate(node, render),
     nicefrac: (node, render) => fracTemplate(node, render),
     flatfrac: (node, render) => fracTemplate(node, render),
-    genfrac: (node, render) => fracTemplate(node, render),
     above: (node, render) => fracTemplate(node, render),
     over: (node, render) => fracTemplate(node, render),
     atop: (node, render) => fracTemplate(node, render, undefined, "0"),

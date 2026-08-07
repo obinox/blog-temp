@@ -134,15 +134,15 @@ export const delimitersMisc = {
     ["maltese"]: { args: 0, optArgs: 0 }, // ✠ Maltese cross
 
     // Special delimiters
-    ["llbracket"]: { args: 0, optArgs: 0 }, // ⟦ left double bracket
-    ["rrbracket"]: { args: 0, optArgs: 0 }, // ⟧ right double bracket
-    ["lgroup"]: { args: 0, optArgs: 0 }, // left group delimiter
-    ["rgroup"]: { args: 0, optArgs: 0 }, // right group delimiter
-    ["lmoustache"]: { args: 0, optArgs: 0 }, // upper left curly brace section
-    ["rmoustache"]: { args: 0, optArgs: 0 }, // upper right curly brace section
-    ["bracevert"]: { args: 0, optArgs: 0 }, // brace vertical extension
-    ["lBrace"]: { args: 0, optArgs: 0 }, // ⦃ left double curly brace
-    ["rBrace"]: { args: 0, optArgs: 0 }, // ⦄ right double curly brace
+    ["llbracket"]: { args: 0, optArgs: 0, isOp: true }, // ⟦ left double bracket
+    ["rrbracket"]: { args: 0, optArgs: 0, isOp: true }, // ⟧ right double bracket
+    ["lgroup"]: { args: 0, optArgs: 0, isOp: true }, // left group delimiter
+    ["rgroup"]: { args: 0, optArgs: 0, isOp: true }, // right group delimiter
+    ["lmoustache"]: { args: 0, optArgs: 0, isOp: true }, // upper left curly brace section
+    ["rmoustache"]: { args: 0, optArgs: 0, isOp: true }, // upper right curly brace section
+    ["bracevert"]: { args: 0, optArgs: 0, isOp: true }, // brace vertical extension
+    ["lBrace"]: { args: 0, optArgs: 0, isOp: true }, // ⦃ left double curly brace
+    ["rBrace"]: { args: 0, optArgs: 0, isOp: true }, // ⦄ right double curly brace
 
     // Dot punctuation
     ["cdotp"]: { args: 0, optArgs: 0 }, // ⋅ centered dot (punctuation spacing)
@@ -162,10 +162,10 @@ export const delimitersMisc = {
     ["j"]: { args: 0, optArgs: 0 }, // ȷ dotless j (text mode)
 
     // Style commands
-    ["displaystyle"]: { args: 0, optArgs: 0 }, // switch to display style
-    ["textstyle"]: { args: 0, optArgs: 0 }, // switch to text style
-    ["scriptstyle"]: { args: 0, optArgs: 0 }, // switch to script style
-    ["scriptscriptstyle"]: { args: 0, optArgs: 0 }, // switch to scriptscript style
+    ["displaystyle"]: { args: 0, optArgs: 0, isStyle: true }, // switch to display style
+    ["textstyle"]: { args: 0, optArgs: 0, isStyle: true }, // switch to text style
+    ["scriptstyle"]: { args: 0, optArgs: 0, isStyle: true }, // switch to script style
+    ["scriptscriptstyle"]: { args: 0, optArgs: 0, isStyle: true }, // switch to scriptscript style
 
     // Phantom / spacing
     ["phantom"]: { args: 1, optArgs: 0 }, // invisible box (occupies space)

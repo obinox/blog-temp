@@ -48,6 +48,10 @@ export function mtable(content, attrs = {}) {
     return `<mtable${mapAttrs(attrs)}>${content}</mtable>`;
 }
 
+export function mstyle(content, attrs = {}) {
+    return `<mstyle${mapAttrs(attrs)}>${content}</mstyle>`;
+}
+
 export function merror(content, attrs = {}) {
     return `<merror${mapAttrs(attrs)}>${content}</merror>`;
 }
