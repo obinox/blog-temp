@@ -95,7 +95,9 @@ export const operators = {
     ["intop"]: { args: 0, optArgs: 0, isOp: true, isLargeOp: true }, // ∫ integral with limits placement
     ["smallint"]: { args: 0, optArgs: 0, isOp: true, isLargeOp: true }, // small inline integral
     ["ointctrclockwise"]: { args: 0, optArgs: 0, isOp: true, isLargeOp: true }, // ∳ counterclockwise contour integral
+    ["ointccw"]: { args: 0, optArgs: 0, isOp: true, isLargeOp: true }, // ∳ counterclockwise contour integral
     ["ointclockwise"]: { args: 0, optArgs: 0, isOp: true, isLargeOp: true }, // ∲ clockwise contour integral
+    ["ointcw"]: { args: 0, optArgs: 0, isOp: true, isLargeOp: true }, // ∲ clockwise contour integral
 
     // Large set / logic operators
     ["bigvee"]: { args: 0, optArgs: 0, isOp: true, isLargeOp: true }, // ⋁ big logical OR
