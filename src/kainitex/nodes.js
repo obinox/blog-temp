@@ -35,9 +35,9 @@ export class NumberNode extends Node {
 }
 
 export class IdentifierNode extends Node {
-    constructor(name) {
+    constructor(value) {
         super(NODE_TYPE.IDENTIFIER);
-        this.name = name;
+        this.value = value;
     }
 }
 
@@ -45,6 +45,7 @@ export class OperatorNode extends Node {
     constructor(value) {
         super(NODE_TYPE.OPERATOR);
         this.value = value;
+        this.isOp = true;
     }
 }
 
@@ -59,18 +60,19 @@ export class ScriptNode extends Node {
 }
 
 export class CommandNode extends Node {
-    constructor(name, args = [], optArg = null) {
+    constructor(value, args = [], optArg = null, isOp = false) {
         super(NODE_TYPE.COMMAND);
-        this.name = name;
+        this.value = value;
         this.args = args;
         if (optArg !== null) this.optArg = optArg;
+        if (isOp) this.isOp = true;
     }
 }
 
 export class EnvironmentNode extends Node {
-    constructor(name, rows = []) {
+    constructor(value, rows = []) {
         super(NODE_TYPE.ENVIRONMENT);
-        this.name = name;
+        this.value = value;
         this.rows = rows;
     }
 }

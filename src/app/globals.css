@@ -1,0 +1,14 @@
+/* MathML Element Type Color Coding for Testing */
+math mo {
+    color: #ec4899 !important; /* Operator (<mo>): Pink / Rose */
+    font-weight: 600;
+}
+
+math mi {
+    color: #0284c7 !important; /* Identifier (<mi>): Sky Blue */
+}
+
+math mn {
+    color: #d97706 !important; /* Number (<mn>): Amber / Orange */
+    font-weight: 600;
+}

@@ -1,8 +1,6 @@
-import { TOKEN_TYPE, NODE_TYPE } from "./types.js";
+import { TOKEN_TYPE, NODE_TYPE, ALLOWED_DELIMITER_TYPES } from "./types.js";
 import { COMMANDS } from "./commands.js";
 import { RootNode, SequenceNode, GroupNode, NumberNode, IdentifierNode, OperatorNode, ScriptNode, CommandNode, EnvironmentNode, ErrorNode, LeftRightNode } from "./nodes.js";
-
-const ALLOWED_DELIMITER_TYPES = Object.freeze(new Set([TOKEN_TYPE.OPERATOR, TOKEN_TYPE.IDENTIFIER, TOKEN_TYPE.COMMAND, TOKEN_TYPE.CHAR, TOKEN_TYPE.LPAREN, TOKEN_TYPE.RPAREN, TOKEN_TYPE.LBRACKET, TOKEN_TYPE.RBRACKET, TOKEN_TYPE.LBRACE, TOKEN_TYPE.RBRACE]));
 
 class Parser {
     constructor(tokens) {
@@ -226,17 +224,17 @@ class Parser {
 
     parseCommand() {
         const token = this.consume(); // COMMAND
-        const name = token.value.slice(1); // strip leading backslash
+        const value = token.value.slice(1); // strip leading backslash
 
-        if (name === "begin") return this.parseEnv();
+        if (value === "begin") return this.parseEnv();
 
-        const spec = COMMANDS[name] ?? { args: 0, optArgs: 0 };
+        const spec = COMMANDS[value] ?? { args: 0, optArgs: 0 };
 
         if (spec.isEnv) {
             if (this.peek()?.type === TOKEN_TYPE.LBRACE) {
-                return this.parseMatrix(name);
+                return this.parseMatrix(value);
             } else {
-                return new ErrorNode(`Command \\${name} expects content enclosed in curly braces {}`, this.peek()?.value ?? "");
+                return new ErrorNode(`Command \\${value} expects content enclosed in curly braces {}`, this.peek()?.value ?? "");
             }
         }
 
@@ -255,15 +253,15 @@ class Parser {
                 args.push(group.children);
             } else {
                 const nextToken = this.peek();
-                return new ErrorNode(`Command \\${name} expects argument enclosed in curly braces {}`, nextToken ? nextToken.value : "");
+                return new ErrorNode(`Command \\${value} expects argument enclosed in curly braces {}`, nextToken ? nextToken.value : "");
             }
         }
 
-        return new CommandNode(name, args, optArg);
+        return new CommandNode(value, args, optArg, spec.isOp);
     }
 
-    parseMatrix(name) {
-        this.consume(); // {
+    parseMatrix(value) {
+        this.consume(); // LBRACE
         const rows = [[[]]];
         let row = 0;
         let col = 0;
@@ -273,7 +271,7 @@ class Parser {
             if (!token) break;
 
             if (token.type === TOKEN_TYPE.RBRACE) {
-                this.consume(); // }
+                this.consume(); // RBRACE
                 break;
             }
 
@@ -299,17 +297,17 @@ class Parser {
             if (node !== null) rows[row][col].push(node);
         }
 
-        return new EnvironmentNode(name, rows);
+        return new EnvironmentNode(value, rows);
     }
 
     parseEnv() {
         let envName = "";
         if (this.peek()?.type === TOKEN_TYPE.LBRACE) {
-            this.consume(); // LBRACE ( { )
+            this.consume(); // LBRACE
             while (this.peek() && this.peek().type !== TOKEN_TYPE.RBRACE) {
                 envName += this.consume().value;
             }
-            if (this.peek()?.type === TOKEN_TYPE.RBRACE) this.consume(); // RBRACE ( } )
+            if (this.peek()?.type === TOKEN_TYPE.RBRACE) this.consume(); // RBRACE
         }
 
         const rows = [[[]]];

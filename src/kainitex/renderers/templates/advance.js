@@ -1,4 +1,5 @@
-import { SYMBOL_MAP, OPERATOR_SYMBOLS } from "../../symbols";
+import { SYMBOL_MAP, OPERATOR_CHAR_MAP } from "../../symbols/index.js";
+import { mrow, mn, mi, mo } from "./basic.js";
 
 export function mrowNode(node, render) {
     const inner = node.children.map((child) => render(child)).join("");
@@ -10,19 +11,19 @@ export function mnNode(node) {
 }
 
 export function miNode(node) {
-    return mi(node.name);
+    return mi(node.value);
 }
 
 export function moNode(node) {
-    return mo(node.value);
+    const val = OPERATOR_CHAR_MAP[node.value] ?? node.value;
+    return mo(val);
 }
 
 export function symbol(node) {
-    const unicodeVal = SYMBOL_MAP[node.name];
-    const isOp = OPERATOR_SYMBOLS.has(node.name);
-    return isOp ? mo(unicodeVal) : mi(unicodeVal);
+    const unicodeVal = SYMBOL_MAP[node.value] ?? node.value;
+    return node.isOp ? mo(unicodeVal) : mi(unicodeVal);
 }
 
 export function fallback(node) {
-    return mi(`\\${node.name}`);
+    return node.isOp ? mo(node.value) : mi(`\\${node.value}`);
 }

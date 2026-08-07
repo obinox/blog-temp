@@ -1,6 +1,6 @@
-import { wrappedTableTemplate } from "../templates";
+import { wrappedTableTemplate } from "../templates/index.js";
 
-export const ENVIRONMENT_RENDERERS = {
+export const environment_mapping = {
     pmatrix: (node, render) => wrappedTableTemplate(node, render, "(", ")"),
     bmatrix: (node, render) => wrappedTableTemplate(node, render, "[", "]"),
     Bmatrix: (node, render) => wrappedTableTemplate(node, render, "{", "}"),

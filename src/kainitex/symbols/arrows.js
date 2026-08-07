@@ -1,4 +1,23 @@
 export const arrows = {
+    // Extensible arrows
+    xrightarrow: "→",
+    xleftarrow: "←",
+    xLeftarrow: "⇐",
+    xRightarrow: "⇒",
+    xLeftrightarrow: "⇔",
+    xleftrightarrow: "↔",
+    xhookleftarrow: "↩",
+    xhookrightarrow: "↪",
+    xmapsto: "↦",
+    xtwoheadleftarrow: "↞",
+    xtwoheadrightarrow: "↠",
+    xlongequal: "=",
+    xrightharpoonup: "⇀",
+    xrightharpoondown: "⇁",
+    xleftharpoonup: "↼",
+    xleftharpoondown: "↽",
+    xrightleftharpoons: "⇌",
+    xleftrightharpoons: "⇋",
     // Basic arrows
     rightarrow: "→",
     leftarrow: "←",

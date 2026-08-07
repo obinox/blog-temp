@@ -1,4 +1,4 @@
-export function serializeAttrs(attrs = {}) {
+export function mapAttrs(attrs = {}) {
     let str = "";
     for (const [key, val] of Object.entries(attrs)) {
         if (val !== undefined && val !== null) {
@@ -9,79 +9,82 @@ export function serializeAttrs(attrs = {}) {
 }
 
 export function mrow(content, attrs = {}) {
-    return `<mrow${serializeAttrs(attrs)}>${content}</mrow>`;
+    return `<mrow${mapAttrs(attrs)}>${content}</mrow>`;
 }
 
 export function mo(content, attrs = {}) {
-    if (!content) return "";
-    return `<mo${serializeAttrs(attrs)}>${content}</mo>`;
+    return `<mo${mapAttrs({ stretchy: false, ...attrs })}>${content}</mo>`;
 }
 
 export function mi(content, attrs = {}) {
-    return `<mi${serializeAttrs(attrs)}>${content}</mi>`;
+    return `<mi${mapAttrs(attrs)}>${content}</mi>`;
 }
 
 export function mn(content, attrs = {}) {
-    return `<mn${serializeAttrs(attrs)}>${content}</mn>`;
+    return `<mn${mapAttrs(attrs)}>${content}</mn>`;
 }
 
 export function mfrac(num, den, attrs = {}) {
-    return `<mfrac${serializeAttrs(attrs)}><mrow>${num}</mrow><mrow>${den}</mrow></mfrac>`;
+    return `<mfrac${mapAttrs(attrs)}>${mrow(num)}${mrow(den)}</mfrac>`;
 }
 
-export function msqrt(content) {
-    return `<msqrt>${content}</msqrt>`;
+export function msqrt(content, attrs = {}) {
+    return `<msqrt${mapAttrs(attrs)}>${content}</msqrt>`;
 }
 
-export function mroot(content, index) {
-    return `<mroot><mrow>${content}</mrow><mrow>${index}</mrow></mroot>`;
+export function mroot(content, index, attrs = {}) {
+    return `<mroot${mapAttrs(attrs)}>${mrow(content)}${mrow(index)}</mroot>`;
 }
 
-export function mtd(content) {
-    return `<mtd>${content}</mtd>`;
+export function mtd(content, attrs = {}) {
+    return `<mtd${mapAttrs(attrs)}>${content}</mtd>`;
 }
 
-export function mtr(content) {
-    return `<mtr>${content}</mtr>`;
+export function mtr(content, attrs = {}) {
+    return `<mtr${mapAttrs(attrs)}>${content}</mtr>`;
 }
 
-export function mtable(content) {
-    return `<mtable>${content}</mtable>`;
+export function mtable(content, attrs = {}) {
+    return `<mtable${mapAttrs(attrs)}>${content}</mtable>`;
 }
 
-export function merror(content) {
-    return `<merror>${content}</merror>`;
+export function merror(content, attrs = {}) {
+    return `<merror${mapAttrs(attrs)}>${content}</merror>`;
 }
 
-export function mtext(content) {
-    return `<mtext>${content}</mtext>`;
+export function mtext(content, attrs = {}) {
+    return `<mtext${mapAttrs(attrs)}>${content}</mtext>`;
 }
 
-export function munderover(base, sub, sup) {
-    return `<munderover>${base}${sub}${sup}</munderover>`;
+export function munderover(base, sub, sup, attrs = {}) {
+    return `<munderover${mapAttrs(attrs)}>${base}${sub}${sup}</munderover>`;
 }
 
-export function munder(base, sub) {
-    return `<munder>${base}${sub}</munder>`;
+export function munder(base, sub, attrs = {}) {
+    return `<munder${mapAttrs(attrs)}>${base}${sub}</munder>`;
 }
 
-export function mmover(base, sup) {
-    return `<mover>${base}${sup}</mover>`;
+export function mmover(base, sup, attrs = {}) {
+    return `<mover${mapAttrs(attrs)}>${base}${sup}</mover>`;
 }
 
-export function msubsup(base, sub, sup) {
-    return `<msubsup>${base}${sub}${sup}</msubsup>`;
+export function mover(base, sup, attrs = {}) {
+    return `<mover${mapAttrs(attrs)}>${base}${sup}</mover>`;
 }
 
-export function msub(base, sub) {
-    return `<msub>${base}${sub}</msub>`;
+export function msubsup(base, sub, sup, attrs = {}) {
+    return `<msubsup${mapAttrs(attrs)}>${base}${sub}${sup}</msubsup>`;
 }
 
-export function msup(base, sup) {
-    return `<msup>${base}${sup}</msup>`;
+export function msub(base, sub, attrs = {}) {
+    return `<msub${mapAttrs(attrs)}>${base}${sub}</msub>`;
 }
 
-export function root(node, renderToMathML) {
-    const inner = node.children.map((child) => renderToMathML(child)).join("");
+export function msup(base, sup, attrs = {}) {
+    return `<msup${mapAttrs(attrs)}>${base}${sup}</msup>`;
+}
+
+export function root(node, render) {
+    const inner = node.children.map((child) => render(child)).join("");
     return `<math>${inner}</math>`;
 }

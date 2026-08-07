@@ -1,4 +1,4 @@
-import { styleTemplate } from "../templates";
+import { styleTemplate, operatorNameTemplate } from "../templates/index.js";
 
 export const styleMapping = {
     mathrm: (node, render) => styleTemplate(node, render, "normal"),
@@ -6,6 +6,17 @@ export const styleMapping = {
     mathit: (node, render) => styleTemplate(node, render, "italic"),
     mathsf: (node, render) => styleTemplate(node, render, "sans-serif"),
     mathtt: (node, render) => styleTemplate(node, render, "monospace"),
+    mathbb: (node, render) => styleTemplate(node, render, "double-struck"),
+    mathcal: (node, render) => styleTemplate(node, render, "script"),
+    mathfrak: (node, render) => styleTemplate(node, render, "fraktur"),
+    mathnormal: (node, render) => styleTemplate(node, render, "italic"),
+    mathscr: (node, render) => styleTemplate(node, render, "script"),
+    mathbfit: (node, render) => styleTemplate(node, render, "bold-italic"),
+    mathsfit: (node, render) => styleTemplate(node, render, "sans-serif-italic"),
+    mathbfsfit: (node, render) => styleTemplate(node, render, "sans-serif-bold-italic"),
+    boldsymbol: (node, render) => styleTemplate(node, render, "bold-italic"),
+    bm: (node, render) => styleTemplate(node, render, "bold-italic"),
+    pmb: (node, render) => styleTemplate(node, render, "bold"),
     text: (node, render) => styleTemplate(node, render, "normal"),
     mbox: (node, render) => styleTemplate(node, render, "normal"),
     textbf: (node, render) => styleTemplate(node, render, "bold"),
@@ -15,4 +26,14 @@ export const styleMapping = {
     texttt: (node, render) => styleTemplate(node, render, "monospace"),
     textnormal: (node, render) => styleTemplate(node, render, "normal"),
     textup: (node, render) => styleTemplate(node, render, "normal"),
+    scr: (node, render) => styleTemplate(node, render, "script"),
+    cal: (node, render) => styleTemplate(node, render, "script"),
+    Bbb: (node, render) => styleTemplate(node, render, "double-struck"),
+    frak: (node, render) => styleTemplate(node, render, "fraktur"),
+    rm: (node, render) => styleTemplate(node, render, "normal"),
+    bf: (node, render) => styleTemplate(node, render, "bold"),
+    it: (node, render) => styleTemplate(node, render, "italic"),
+    sf: (node, render) => styleTemplate(node, render, "sans-serif"),
+    tt: (node, render) => styleTemplate(node, render, "monospace"),
+    operatorname: (node, render) => operatorNameTemplate(node, render),
 };
